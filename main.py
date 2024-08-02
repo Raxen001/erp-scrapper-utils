@@ -3,15 +3,17 @@ from requests import JSONDecodeError
 import cap2txt
 import re
 from urllib.parse import unquote
+import base64
 
 from pprint import pprint
+import sys
 
 URL_LOGIN = "https://erp.rajalakshmi.org/iitmsv4eGq0RuNHb0G5WbhLmTKLmTO7YBcJ4RHuXxCNPvuIw=?enc=iF6gEp4ArHiXP7jJ9QlgUyiC5t8GbTA5A/9xbk1Vtqk="
 BASE_URL = 'https://erp.rajalakshmi.org/'
 
 # debug
-# USER = '211001084'
-# PASS = 'Suck_my_cock69@'
+USER = '210701095'
+PASS = '210701095@Rajalakshm'
 
 PNG = "./temp.png"
 def download_captcha_image(url, session):
@@ -44,16 +46,16 @@ def login(session, CAPTCHA, viewstate):
         '__VIEWSTATE': unquote(viewstate),
         '__VIEWSTATEGENERATOR': 'CA0B0334',
         '__VIEWSTATEENCRYPTED': '',
-        'txt_username': '211001084',
-        'txt_password': 'Suck_my_cock69@',
+        'txt_username': USER,
+        'txt_password': PASS,
         'txtcaptcha': CAPTCHA,
         'txtdemo': '',
         'hdfuserno': '',
         'hdffirstlog': '',
         'hdflastlogout': '',
         'hdfAllowpopup': '',
-        'hdnusername': 'MjExMDAxMDg0',
-        'hdnpassword': 'U3Vja19teV9jb2NrNjlA',
+        'hdnusername': base64.b64encode(USER.encode()),
+        'hdnpassword': base64.b64encode(PASS.encode()),
         'txtName': '',
         'TextBoxWatermarkExtender2_ClientState': '',
         'txt_emailid': '',
@@ -61,10 +63,15 @@ def login(session, CAPTCHA, viewstate):
         'txt_captcha': '',
         'txt_captcha_TextBoxWatermarkExtender_ClientState': '',
     }
-    session.post(
+    res = session.post(
         'https://erp.rajalakshmi.org/iitmsv4eGq0RuNHb0G5WbhLmTKLmTO7YBcJ4RHuXxCNPvuIw=?%2f',
         data=data,
     )
+
+    if "<!-- Encrypt / Decrypt Username and PWD -->" not in res.text:
+        pprint("LOGGED IN: ")
+        pprint(session.cookies.get_dict())
+        pprint(data)
     
     # login
     # pprint(session.cookies.get_dict())
@@ -80,6 +87,7 @@ def get_attendance(session):
         if data['d']['AttendList'] != None:
             pprint(data)
             pprint(session.cookies.get_dict())
+            sys.exit()
         else:
             print("Failed...")
     except JSONDecodeError:
@@ -93,10 +101,9 @@ def main():
 
         data = session.get(URL_LOGIN)
         CAPTCHA = get_captcha_text(data, session)
+        CAPTCHA = ""
+        print("cap2: ", CAPTCHA)
         viewstate = get_view_state(data) 
-        #debug
-        print('captcha: ', CAPTCHA)
-
         login(session, CAPTCHA, viewstate)
         get_attendance(session)
 

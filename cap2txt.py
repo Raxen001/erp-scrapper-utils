@@ -1,7 +1,5 @@
 import cv2
 from pytesseract import image_to_string
-import requests
-import sys
 
 def cap2txt(png):
     img = cv2.imread(png)
@@ -16,6 +14,7 @@ def cap2txt(png):
     txt = image_to_string(thr)
     txt = txt.replace(" ", "")
     txt = txt.replace("\n", "")
+    txt = txt.strip()
 
 
     #debug
@@ -23,6 +22,7 @@ def cap2txt(png):
     cv2.imshow("captcha", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    cv2.waitKey(0)
+    for _ in range (1,5):
+        cv2.waitKey(1)
 
     return txt
