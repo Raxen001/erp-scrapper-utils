@@ -12,10 +12,10 @@ URL_LOGIN = "https://erp.rajalakshmi.org/iitmsv4eGq0RuNHb0G5WbhLmTKLmTO7YBcJ4RHu
 BASE_URL = 'https://erp.rajalakshmi.org/'
 
 # debug
-USER = '210701095'
-PASS = '210701095@Rajalakshm'
+USER = ''
+PASS = ''
 
-PNG = "./temp.png"
+PNG = ""
 def download_captcha_image(url, session):
     with open(PNG, 'wb') as f:
         data = session.get(url)
